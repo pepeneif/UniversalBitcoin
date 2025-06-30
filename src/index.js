@@ -16,6 +16,7 @@ import { connectDatabase, disconnectDatabase } from './config/database.js';
 import { connectRedis, disconnectRedis } from './config/redis.js';
 import logger from './utils/logger.util.js';
 import apiRoutes from './api/routes/index.js';
+import { maintenanceCheck } from './api/middleware/maintenance.middleware.js';
 
 // ES Module compatibility
 const __filename = fileURLToPath(import.meta.url);
@@ -106,6 +107,12 @@ class UniversalBitcoinApp {
    * Setup application routes
    */
   setupRoutes() {
+    // Serve static files for admin dashboard
+    this.app.use('/admin', express.static(join(__dirname, '../public/admin')));
+    
+    // Maintenance mode check for API routes
+    this.app.use('/api', maintenanceCheck);
+    
     // Root endpoint
     this.app.get('/', (req, res) => {
       res.json({

@@ -23,6 +23,8 @@ import logger from '../../utils/logger.util.js';
 // Import routes
 import validationRoutes from './validation.routes.js';
 import reservesRoutes from './reserves.routes.js';
+import adminRoutes from './admin.routes.js';
+import authRoutes from './auth.routes.js';
 
 const router = express.Router();
 
@@ -139,9 +141,10 @@ router.get('/info', optionalAuth, (req, res) => {
     description: 'Multi-chain proof-of-reserves system with Guardian Angels security',
     documentation: '/api/docs',
     endpoints: {
+      authentication: '/api/v1/auth',
       validation: '/api/v1/validate',
       reserves: '/api/v1/reserves',
-      authentication: '/api/v1/auth'
+      admin: '/api/v1/admin'
     },
     supportedChains: ['ethereum', 'solana', 'polygon', 'arbitrum', 'bsc'],
     features: [
@@ -204,20 +207,9 @@ router.use('/validate', validationRoutes);
 router.use('/reserves', reservesRoutes);
 
 /**
- * Authentication routes (placeholder)
+ * Authentication routes
  */
-router.use('/auth', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Authentication endpoints not yet implemented',
-    availableEndpoints: [
-      'POST /api/v1/auth/login',
-      'POST /api/v1/auth/register',
-      'POST /api/v1/auth/refresh',
-      'POST /api/v1/auth/logout'
-    ]
-  });
-});
+router.use('/auth', authRoutes);
 
 /**
  * Guardian Angels routes (placeholder)
@@ -235,20 +227,9 @@ router.use('/guardians', (req, res) => {
 });
 
 /**
- * Admin routes (placeholder)
+ * Admin routes
  */
-router.use('/admin', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Admin endpoints not yet implemented',
-    availableEndpoints: [
-      'GET /api/v1/admin/stats',
-      'POST /api/v1/admin/reserves/update',
-      'GET /api/v1/admin/logs',
-      'POST /api/v1/admin/maintenance'
-    ]
-  });
-});
+router.use('/admin', adminRoutes);
 
 /**
  * Catch-all for undefined routes

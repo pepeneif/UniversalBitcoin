@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Bitcoin - Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='24' font-size='24'>₿</text></svg>">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner">
+            <i class="fab fa-bitcoin"></i>
+        </div>
+        <p>Loading Admin Dashboard...</p>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fab fa-bitcoin"></i>
+                <h1>Universal Bitcoin</h1>
+                <p>Admin Dashboard</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+                <div id="login-error" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="main-dashboard" class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fab fa-bitcoin"></i>
+                <span>Universal Bitcoin</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="overview">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-section="stats">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Statistics</span>
+                </a>
+                <a href="#" class="nav-item" data-section="guardians">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Guardian Angels</span>
+                </a>
+                <a href="#" class="nav-item" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+                <a href="#" class="nav-item" data-section="logs">
+                    <i class="fas fa-file-alt"></i>
+                    <span>System Logs</span>
+                </a>
+                <a href="#" class="nav-item" data-section="config">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuration</span>
+                </a>
+                <a href="#" class="nav-item" data-section="maintenance">
+                    <i class="fas fa-tools"></i>
+                    <span>Maintenance</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="current-user">Admin User</span>
+                </div>
+                <button id="logout-btn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="page-title">Dashboard Overview</h1>
+                <div class="header-actions">
+                    <button id="refresh-btn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                    <div class="status-indicator">
+                        <span class="status-dot status-healthy"></span>
+                        <span id="system-status">System Healthy</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Bitcoin Reserves</h3>
+                            <div class="metric-value" id="btc-reserves">10.5 BTC</div>
+                            <div class="metric-change positive">+0.02 BTC today</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Token Supply</h3>
+                            <div class="metric-value" id="token-supply">10.5 uBTC</div>
+                            <div class="metric-change neutral">No change</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Reserve Ratio</h3>
+                            <div class="metric-value" id="reserve-ratio">100.0%</div>
+                            <div class="metric-change positive">Fully backed</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Validations Today</h3>
+                            <div class="metric-value" id="validations-today">45</div>
+                            <div class="metric-change positive">+12 from yesterday</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Reserve Ratio Over Time</h3>
+                        <canvas id="reserve-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Validation Activity</h3>
+                        <canvas id="validation-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="activity-feed" class="activity-feed">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section id="stats-section" class="content-section">
+                <div class="stats-container">
+                    <div class="stats-header">
+                        <h2>System Statistics</h2>
+                        <div class="stats-filters">
+                            <select id="stats-timeframe">
+                                <option value="1h">Last Hour</option>
+                                <option value="24h" selected>Last 24 Hours</option>
+                                <option value="7d">Last 7 Days</option>
+                                <option value="30d">Last 30 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="stats-content" class="stats-content">
+                        <!-- Statistics content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Guardian Angels Section -->
+            <section id="guardians-section" class="content-section">
+                <div class="guardians-container">
+                    <div class="guardians-header">
+                        <h2>Guardian Angels Status</h2>
+                        <button id="test-consensus-btn" class="btn btn-primary">
+                            <i class="fas fa-flask"></i>
+                            Test Consensus
+                        </button>
+                    </div>
+                    <div class="guardians-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Guardians:</span>
+                            <span id="guardians-total">5</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Online:</span>
+                            <span id="guardians-online">5</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Consensus Threshold:</span>
+                            <span id="guardians-threshold">3</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Consensus Capable:</span>
+                            <span id="guardians-capable" class="status-positive">Yes</span>
+                        </div>
+                    </div>
+                    <div id="guardians-grid" class="guardians-grid">
+                        <!-- Guardian cards will be populated by JavaScript -->
+                    </div>
+                    <div class="consensus-history">
+                        <h3>Recent Consensus Operations</h3>
+                        <div id="consensus-history" class="consensus-history-list">
+                            <!-- Consensus history will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users-section" class="content-section">
+                <div class="users-container">
+                    <div class="users-header">
+                        <h2>User Management</h2>
+                        <button id="create-user-btn" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Create User
+                        </button>
+                    </div>
+                    <div class="users-filters">
+                        <select id="users-role-filter">
+                            <option value="">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                            <option value="guardian">Guardian</option>
+                        </select>
+                        <input type="text" id="users-search" placeholder="Search users...">
+                    </div>
+                    <div id="users-table" class="users-table">
+                        <!-- Users table will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logs Section -->
+            <section id="logs-section" class="content-section">
+                <div class="logs-container">
+                    <div class="logs-header">
+                        <h2>System Logs</h2>
+                        <div class="logs-filters">
+                            <select id="logs-level-filter">
+                                <option value="">All Levels</option>
+                                <option value="error">Error</option>
+                                <option value="warn">Warning</option>
+                                <option value="info">Info</option>
+                                <option value="debug">Debug</option>
+                            </select>
+                            <select id="logs-category-filter">
+                                <option value="">All Categories</option>
+                                <option value="security">Security</option>
+                                <option value="bitcoin">Bitcoin</option>
+                                <option value="validation">Validation</option>
+                                <option value="system">System</option>
+                            </select>
+                            <button id="logs-refresh" class="btn btn-secondary">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div id="logs-content" class="logs-content">
+                        <!-- Logs content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration Section -->
+            <section id="config-section" class="content-section">
+                <div class="config-container">
+                    <div class="config-header">
+                        <h2>System Configuration</h2>
+                        <button id="save-config-btn" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                    <div id="config-content" class="config-content">
+                        <!-- Configuration forms will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Maintenance Section -->
+            <section id="maintenance-section" class="content-section">
+                <div class="maintenance-container">
+                    <div class="maintenance-header">
+                        <h2>Maintenance Mode</h2>
+                        <div class="maintenance-status">
+                            <span class="status-indicator">
+                                <i id="maintenance-icon" class="fas fa-circle"></i>
+                                <span id="maintenance-status">System Operational</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="maintenance-controls">
+                        <div class="form-group">
+                            <label for="maintenance-message">Maintenance Message</label>
+                            <textarea id="maintenance-message" placeholder="Enter maintenance message..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-duration">Estimated Duration (minutes)</label>
+                            <input type="number" id="maintenance-duration" min="1" max="1440" value="60">
+                        </div>
+                        <div class="maintenance-actions">
+                            <button id="enable-maintenance-btn" class="btn btn-warning">
+                                <i class="fas fa-tools"></i>
+                                Enable Maintenance Mode
+                            </button>
+                            <button id="disable-maintenance-btn" class="btn btn-success" style="display: none;">
+                                <i class="fas fa-check"></i>
+                                Disable Maintenance Mode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay">
+        <!-- User Creation Modal -->
+        <div id="create-user-modal" class="modal">
+            <div class="modal-header">
+                <h3>Create New User</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="create-user-form" class="modal-content">
+                <div class="form-group">
+                    <label for="new-user-name">Full Name</label>
+                    <input type="text" id="new-user-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-user-email">Email</label>
+                    <input type="email" id="new-user-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-user-role">Role</label>
+                    <select id="new-user-role" required>
+                        <option value="">Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                        <option value="guardian">Guardian</option>
+                    </select>
+                </div>
+                <div class="form-group" id="guardian-id-group" style="display: none;">
+                    <label for="new-user-guardian-id">Guardian ID</label>
+                    <input type="text" id="new-user-guardian-id">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Consensus Test Modal -->
+        <div id="consensus-test-modal" class="modal">
+            <div class="modal-header">
+                <h3>Test Guardian Consensus</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="form-group">
+                    <label for="test-message">Test Message</label>
+                    <textarea id="test-message" placeholder="Enter message to sign..." rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+                    <button id="run-consensus-test" class="btn btn-primary">Run Test</button>
+                </div>
+                <div id="consensus-test-results" class="test-results" style="display: none;">
+                    <!-- Test results will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
