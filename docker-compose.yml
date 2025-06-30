@@ -1,0 +1,168 @@
+# Universal Bitcoin - Docker Compose Configuration
+# 
+# Complete development environment with all required services.
+# Includes PostgreSQL, Redis, and the main application.
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database with TimescaleDB
+  postgres:
+    image: timescale/timescaledb:latest-pg15
+    container_name: universal-bitcoin-postgres
+    environment:
+      POSTGRES_DB: universal_bitcoin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: development_password
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - universal-bitcoin-network
+
+  # Redis for caching and queues
+  redis:
+    image: redis:7-alpine
+    container_name: universal-bitcoin-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass development_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - universal-bitcoin-network
+
+  # Main Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: universal-bitcoin-app
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:development_password@postgres:5432/universal_bitcoin
+      REDIS_URL: redis://:development_password@redis:6379
+      JWT_SECRET: development_jwt_secret_key_change_in_production
+      JWT_REFRESH_SECRET: development_refresh_secret_key_change_in_production
+      MASTER_SEED: development_master_seed_change_in_production
+      GUARDIAN_THRESHOLD: 3
+      TOTAL_GUARDIANS: 5
+      BITCOIN_NETWORK: testnet
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - universal-bitcoin-network
+    restart: unless-stopped
+
+  # PostgreSQL Admin (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: universal-bitcoin-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@universalbitcoin.org
+      PGADMIN_DEFAULT_PASSWORD: development_password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - universal-bitcoin-network
+    profiles:
+      - admin
+
+  # Redis Commander (Redis Admin)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: universal-bitcoin-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:development_password
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - universal-bitcoin-network
+    profiles:
+      - admin
+
+  # Log aggregation (optional)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: universal-bitcoin-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - universal-bitcoin-network
+    profiles:
+      - logging
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: universal-bitcoin-kibana
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - universal-bitcoin-network
+    profiles:
+      - logging
+
+# Persistent volumes
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+
+# Network configuration
+networks:
+  universal-bitcoin-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

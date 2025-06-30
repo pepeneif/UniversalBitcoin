@@ -1,8 +1,4 @@
-# MOVED TO .kilocode/rules/MEMORY-MAP.md
-
-This file has been moved to [`.kilocode/rules/MEMORY-MAP.md`](.kilocode/rules/MEMORY-MAP.md) for better project organization.
-
-Please refer to the new location for the complete memory map and cognitive framework.
+# Universal Bitcoin Project Memory Map
 
 ## 🧠 Mental Model Overview
 

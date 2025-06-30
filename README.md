@@ -1,19 +1,19 @@
-# Universal Bitcoin Multi-Chain Proof-of-Reserves System
+# Universal Bitcoin 
+##Multi-Chain Proof-of-Reserves System
 
 ## 🚀 Overview
 
-Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system that provides **complete transparency** for UniversalBTC (uBTC) tokens. Our system allows anyone to cryptographically verify that uBTC tokens are backed by real Bitcoin reserves through an innovative pay-per-validation model.
+Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system that provides **complete transparency** for UniversalBTC (uBTC) tokens. Our system allows anyone to cryptographically verify that uBTC tokens are backed by real Bitcoin reserves through a pay-per-validation model.
 
 ## 🎯 Key Features
 
 ### 🔍 **Proof-of-Reserves Validation**
-- Anyone can request cryptographic proof that Bitcoin reserves match minted uBTC tokens
-- Pay small fees (Lamports on Solana, Gwei on Ethereum) to trigger Bitcoin message signing
-- Real-time verification across multiple blockchain networks
+- Anyone can request cryptographic proof that Bitcoin reserves match minted uBTC tokens in each of the supported chains
+- Pay small fees (Lamports on Solana, Gwei on Ethereum) to trigger the issuance of an easy to verify signed Bitcoin message
+- Real-time verification across multiple blockchains
 
 ### 🌐 **Multi-Chain Support**
-- **Primary Chains**: Ethereum, Solana
-- **Expansion Chains**: Polygon, Arbitrum, BSC
+- **Supported Chains**: Ethereum, Solana, Polygon, Arbitrum, BSC 
 - **Separate Reserves** backing the tokens on each of the supported chains
 
 ### 📊 **Public Transparency Dashboard**
@@ -61,11 +61,11 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 ## 💰 How It Works
 
 ### To validate our Reserves (Proof Requests)
-1. **Make Payment**: Send small amount (e.g., 0.001 ETH or 0.01 SOL) to designated address
-2. **Include Message**: Specify the message you want signed in transaction data
+1. **Make Payment**: Send small amount (e.g., 0.001 ETH or 0.01 SOL) to a specific address
+2. **Include Message**: Specify the message you want signed in the validation user interface
 3. **Guardian Review**: Multiple Guardian Angels independently review and approve the request
 4. **Get Proof**: Receive an easy to verify Bitcoin message proving control of the reserves
-5. **Verify Independently**: Use Bitcoin tools to verify the message
+5. **Verify Independently**: Use Bitcoin standard tools or wallets to verify the message
 
 ### For uBTC Token Holders
 1. **Check Dashboard**: View real-time reserve ratios and system health
@@ -91,7 +91,7 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/UniversalBTC.git
+git clone https://github.com/pepeneif/UniversalBTC.git
 cd UniversalBTC
 
 # Install dependencies
@@ -343,23 +343,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-### Phase 1: Core System (Q1 2024)
+### Phase 1: Core System (Q2 2025)
 - ✅ Multi-chain validation engine
 - ✅ Public transparency dashboard
 - ✅ Admin minting/burning interface
 - ✅ Rate limiting and security
 
-### Phase 2: Enhanced Features (Q2 2024)
-- 🔲 Hardware security module integration
+### Phase 2: Enhanced Features (Q3 2025)
 - 🔲 Advanced analytics and reporting
 - 🔲 Mobile app for validation requests
 - 🔲 Automated reserve management
 
-### Phase 3: Expansion (Q3 2024)
+### Phase 3: Expansion (Q4 2025)
 - 🔲 Additional blockchain support
-- 🔲 Institutional API features
-- 🔲 Cross-chain bridge integration
-- 🔲 Governance token launch
+- 🔲 Additional API features
 
 ---
 
