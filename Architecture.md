@@ -30,15 +30,17 @@ The Universal Bitcoin proof-of-reserves system is designed as a transparent, sca
 - Queue-based processing
 - Auto-scaling capabilities
 
-### 5. **Guardian Angels Multi-Signature Security**
-- Multiple trusted parties ("Guardian Angels") control Bitcoin signing
-- M-of-N signature scheme for enhanced security
-- Distributed key management across Guardian Angels
-- Consensus-based validation approval process
+### 5. **Multi-Layer Security Architecture**
+- **Guardian Angels Multi-Signature**: Multiple trusted parties control Bitcoin signing with M-of-N signatures
+- **DLC Reserve Protection**: 80% of reserves locked in immutable Discrete Log Contracts
+- **Liquidity Provider System**: 20% liquid reserves managed by economic incentive system
+- **Advanced Script Engine**: Complex Bitcoin script compilation and execution
+- **Oracle Integration**: External data feeds for automated contract execution
+- **Distributed Trust Model**: No single point of failure across all security layers
 
 ## 🔧 System Components
 
-### Core Services Architecture
+### Enhanced Security Architecture
 
 ```mermaid
 graph TB
@@ -64,6 +66,20 @@ graph TB
         AS[Analytics Service]
     end
     
+    subgraph "Security Layer"
+        GA[Guardian Angels]
+        DLC[DLC Manager]
+        LP[Liquidity Providers]
+        ORACLE[Oracle Service]
+    end
+    
+    subgraph "DLC Layer"
+        COMPILER[Script Compiler]
+        EXECUTOR[Contract Executor]
+        VALIDATOR[Script Validator]
+        TIMELOCK[Timelock Manager]
+    end
+    
     subgraph "Integration Layer"
         BCH[Blockchain Handler]
         BTC[Bitcoin Service]
@@ -76,6 +92,8 @@ graph TB
         RD[(Redis)]
         TS[(TimescaleDB)]
         FS[(File Storage)]
+        DLC_DB[(DLC Contracts)]
+        LP_DB[(LP Positions)]
     end
     
     subgraph "Infrastructure Layer"
@@ -97,6 +115,16 @@ graph TB
     RATE --> PS
     CACHE --> RS
     
+    VS --> GA
+    GA --> DLC
+    DLC --> LP
+    LP --> ORACLE
+    
+    DLC --> COMPILER
+    COMPILER --> EXECUTOR
+    EXECUTOR --> VALIDATOR
+    VALIDATOR --> TIMELOCK
+    
     VS --> BCH
     PS --> BTC
     NS --> WHS
@@ -107,6 +135,8 @@ graph TB
     BTC --> RD
     WHS --> PG
     QS --> RD
+    DLC --> DLC_DB
+    LP --> LP_DB
     
     PG --> BACKUP
     RD --> MON
@@ -164,6 +194,73 @@ CREATE TABLE chain_tokens (
 );
 ```
 
+**DLC Contracts Table**
+```sql
+CREATE TABLE dlc_contracts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    contract_id VARCHAR(128) UNIQUE NOT NULL,
+    contract_type VARCHAR(50) NOT NULL, -- 'timelock', 'oracle', 'emergency'
+    bitcoin_amount DECIMAL(20,8) NOT NULL,
+    locked_until TIMESTAMP,
+    oracle_conditions JSONB,
+    guardian_threshold INTEGER DEFAULT 4,
+    compiled_script TEXT NOT NULL,
+    script_hash VARCHAR(64) NOT NULL,
+    funding_tx_id VARCHAR(128),
+    status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'active', 'executed', 'expired'
+    created_at TIMESTAMP DEFAULT NOW(),
+    executed_at TIMESTAMP
+);
+```
+
+**Liquidity Providers Table**
+```sql
+CREATE TABLE liquidity_providers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    provider_address VARCHAR(128) NOT NULL,
+    chain VARCHAR(50) NOT NULL,
+    collateral_amount DECIMAL(20,8) NOT NULL,
+    liquid_amount DECIMAL(20,8) NOT NULL,
+    collateral_ratio DECIMAL(10,4) NOT NULL,
+    reward_rate DECIMAL(10,6) DEFAULT 0.05,
+    penalty_amount DECIMAL(20,8) DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'active', -- 'active', 'liquidating', 'liquidated'
+    last_update TIMESTAMP DEFAULT NOW(),
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(provider_address, chain)
+);
+```
+
+**Oracle Events Table**
+```sql
+CREATE TABLE oracle_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    oracle_id VARCHAR(128) NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    event_data JSONB NOT NULL,
+    signatures JSONB, -- Array of oracle signatures
+    consensus_reached BOOLEAN DEFAULT false,
+    dlc_contract_id UUID REFERENCES dlc_contracts(id),
+    timestamp TIMESTAMP DEFAULT NOW()
+);
+```
+
+**Guardian Consensus Table**
+```sql
+CREATE TABLE guardian_consensus (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    operation_type VARCHAR(50) NOT NULL, -- 'validation', 'dlc_emergency', 'lp_liquidation'
+    operation_id UUID NOT NULL,
+    guardian_signatures JSONB NOT NULL,
+    required_threshold INTEGER NOT NULL,
+    current_approvals INTEGER DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'approved', 'rejected', 'expired'
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    completed_at TIMESTAMP
+);
+```
+
 **Audit Logs Table**
 ```sql
 CREATE TABLE audit_logs (
@@ -174,6 +271,9 @@ CREATE TABLE audit_logs (
     resource_id UUID,
     old_values JSONB,
     new_values JSONB,
+    security_level VARCHAR(20) DEFAULT 'low', -- 'low', 'medium', 'high', 'critical'
+    dlc_contract_id UUID,
+    lp_provider_id UUID,
     ip_address INET,
     user_agent TEXT,
     created_at TIMESTAMP DEFAULT NOW()
@@ -254,65 +354,164 @@ cache_config:
     max_size: 1000
 ```
 
-## 🔒 Security Architecture
+## 🔒 Multi-Layer Security Architecture
 
-### Key Management System
+### DLC + LP + Guardian Angels Security Model
 
 ```mermaid
 graph TB
-    subgraph "Key Storage"
+    subgraph "Layer 1: DLC Protection (80% Reserves)"
+        DLC_LOCK[DLC Locked Reserves]
+        TIME_LOCK[Time-Based Locks]
+        ORACLE_COND[Oracle Conditions]
+        EMERGENCY[Emergency Unlock]
+    end
+    
+    subgraph "Layer 2: LP Management (20% Reserves)"
+        LP_POOL[Liquidity Pool]
+        COLLATERAL[Collateral Management]
+        INCENTIVES[Economic Incentives]
+        RISK_MGMT[Risk Management]
+    end
+    
+    subgraph "Layer 3: Guardian Angels"
+        GA_CONSENSUS[Guardian Consensus]
+        MULTI_SIG[Multi-Signature]
+        VALIDATION[Validation Approval]
+        GOVERNANCE[System Governance]
+    end
+    
+    subgraph "Key Management"
         MASTER[Master Key]
         DERIVED[Derived Keys]
         ENCRYPTED[Encrypted Storage]
-    end
-    
-    subgraph "Access Control"
-        RBAC[Role-Based Access]
-        MFA[Multi-Factor Auth]
-        AUDIT[Access Auditing]
-    end
-    
-    subgraph "Encryption"
-        AES[AES-256-GCM]
-        PBKDF2[PBKDF2 Key Derivation]
         HSM[Future: Hardware HSM]
     end
     
-    MASTER --> PBKDF2
-    PBKDF2 --> DERIVED
-    DERIVED --> AES
-    AES --> ENCRYPTED
+    subgraph "Script Engine"
+        COMPILER[Bitcoin Script Compiler]
+        VALIDATOR[Script Validator]
+        EXECUTOR[Contract Executor]
+        OPTIMIZER[Script Optimizer]
+    end
     
-    RBAC --> AUDIT
-    MFA --> AUDIT
-    AUDIT --> ENCRYPTED
+    DLC_LOCK --> TIME_LOCK
+    TIME_LOCK --> ORACLE_COND
+    ORACLE_COND --> EMERGENCY
+    
+    LP_POOL --> COLLATERAL
+    COLLATERAL --> INCENTIVES
+    INCENTIVES --> RISK_MGMT
+    
+    GA_CONSENSUS --> MULTI_SIG
+    MULTI_SIG --> VALIDATION
+    VALIDATION --> GOVERNANCE
+    
+    MASTER --> DERIVED
+    DERIVED --> ENCRYPTED
+    ENCRYPTED --> HSM
+    
+    COMPILER --> VALIDATOR
+    VALIDATOR --> EXECUTOR
+    EXECUTOR --> OPTIMIZER
+    
+    DLC_LOCK --> COMPILER
+    LP_POOL --> GA_CONSENSUS
+    EMERGENCY --> GA_CONSENSUS
 ```
 
-### Security Layers
+### DLC Security Architecture
 
-1. **Network Security**
-   - WAF (Web Application Firewall)
-   - DDoS protection
-   - IP allowlisting for admin functions
-   - TLS 1.3 encryption
+#### Discrete Log Contract Framework
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant DLC_Manager
+    participant Script_Compiler
+    participant Bitcoin_Network
+    participant Oracle
+    participant Guardian_Angels
+    
+    Admin->>DLC_Manager: Create DLC Contract
+    DLC_Manager->>Script_Compiler: Compile Multi-Condition Script
+    Script_Compiler->>Script_Compiler: Validate Script Security
+    Script_Compiler->>DLC_Manager: Return Compiled Script
+    DLC_Manager->>Guardian_Angels: Request Approval
+    Guardian_Angels->>Guardian_Angels: Consensus Vote
+    Guardian_Angels->>Bitcoin_Network: Deploy Contract
+    Bitcoin_Network->>Bitcoin_Network: Lock Funds
+    
+    Oracle->>DLC_Manager: Provide Event Data
+    DLC_Manager->>Script_Compiler: Evaluate Conditions
+    Script_Compiler->>Bitcoin_Network: Execute Contract
+    Bitcoin_Network->>Bitcoin_Network: Unlock Funds (if conditions met)
+```
 
-2. **Application Security**
-   - Input validation and sanitization
-   - SQL injection prevention
-   - XSS protection
-   - CSRF tokens
+#### Bitcoin Script Compilation Pipeline
+```mermaid
+graph LR
+    INPUT[Script Template] --> PARSER[Template Parser]
+    PARSER --> VALIDATOR[Security Validator]
+    VALIDATOR --> OPTIMIZER[Script Optimizer]
+    OPTIMIZER --> COMPILER[Bitcoin Compiler]
+    COMPILER --> TESTER[Script Tester]
+    TESTER --> OUTPUT[Deployed Contract]
+    
+    VALIDATOR --> SECURITY[Security Rules]
+    OPTIMIZER --> PERFORMANCE[Performance Rules]
+    COMPILER --> CONSENSUS[Consensus Rules]
+    TESTER --> SIMULATION[Test Simulation]
+```
 
-3. **Data Security**
-   - Encryption at rest (AES-256)
-   - Encryption in transit (TLS)
-   - Key rotation policies
-   - Secure key derivation
+### Enhanced Security Layers
 
-4. **Access Security**
-   - JWT-based authentication
-   - Role-based authorization
-   - Session management
-   - Rate limiting
+#### 1. **DLC Security Layer (Tier 1 - Maximum Protection)**
+- **Immutable Contracts**: 80% of reserves locked in mathematically enforced contracts
+- **Time-Lock Protection**: Minimum 24-hour unlock delay for all operations
+- **Oracle Consensus**: 2-of-3 oracle signatures required for condition-based unlocks
+- **Emergency Override**: 4-of-5 Guardian consensus for emergency access
+- **Script Validation**: Formal verification of all Bitcoin scripts before deployment
+- **Contract Immutability**: DLC terms cannot be modified after deployment
+
+#### 2. **Liquidity Provider Security Layer (Tier 2 - Economic Security)**
+- **Collateral Requirements**: 150% minimum collateral ratio for all LPs
+- **Real-time Monitoring**: Continuous solvency and risk assessment
+- **Automated Liquidation**: Triggered at 120% collateral ratio
+- **Penalty System**: 10% penalty for LP failures or defaults
+- **Insurance Fund**: Community-funded reserve for LP failures
+- **Multi-chain Diversification**: Risk spread across supported blockchains
+
+#### 3. **Guardian Angels Security Layer (Tier 3 - Consensus Security)**
+- **Multi-signature Control**: 3-of-5 threshold for all critical operations
+- **Distributed Trust**: Geographically and organizationally distributed Guardians
+- **Consensus Protocol**: Byzantine fault-tolerant approval process
+- **Access Control**: Role-based permissions with multi-factor authentication
+- **Communication Security**: End-to-end encrypted Guardian coordination
+- **Audit Transparency**: Complete logging of all Guardian activities
+
+#### 4. **Application Security Layer (Tier 4 - Traditional Security)**
+- **Input Validation**: Comprehensive sanitization and validation
+- **SQL Injection Prevention**: Parameterized queries and ORM protection
+- **XSS Protection**: Content Security Policy and output encoding
+- **CSRF Protection**: Token-based request validation
+- **Rate Limiting**: Multi-layer request throttling
+- **Session Management**: Secure JWT with proper expiration
+
+#### 5. **Network Security Layer (Tier 5 - Infrastructure Security)**
+- **WAF Protection**: Web Application Firewall with DDoS mitigation
+- **TLS 1.3 Encryption**: End-to-end encrypted communications
+- **IP Allowlisting**: Restricted access for administrative functions
+- **Network Segmentation**: Isolated security zones for different components
+- **Intrusion Detection**: Real-time monitoring and alerting
+- **Backup Security**: Encrypted, distributed backup systems
+
+#### 6. **Data Security Layer (Tier 6 - Information Protection)**
+- **Encryption at Rest**: AES-256-GCM for all stored data
+- **Encryption in Transit**: TLS 1.3 for all network communications
+- **Key Management**: Hierarchical deterministic key derivation
+- **Key Rotation**: Automated rotation policies for all cryptographic keys
+- **Secure Deletion**: Cryptographic erasure of sensitive data
+- **Data Classification**: Tiered security based on data sensitivity
 
 ## 🔄 Processing Flows
 

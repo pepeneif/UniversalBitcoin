@@ -28,7 +28,7 @@ This memory map serves as the **cognitive foundation** for the Universal Bitcoin
 
 ## 🏗️ System Mental Framework
 
-### 1. **The Three Pillars**
+### 1. **The Enhanced Security Pillars**
 
 ```mermaid
 mindmap
@@ -36,17 +36,34 @@ mindmap
     Transparency
       Public Dashboard
       Real-time Metrics
+      DLC Contract Visibility
+      LP Performance Tracking
       Audit Trails
       Open Source
     
-    Security
+    Multi-Layer Security
+      DLC Protection (80% Reserves)
+        Immutable Time Locks
+        Oracle Conditions
+        Emergency Overrides
+        Script Validation
+      
+      Liquidity Providers (20% Reserves)
+        Economic Incentives
+        Collateral Management
+        Risk Assessment
+        Automated Liquidation
+      
       Guardian Angels Multi-Sig
-      Rate Limiting
-      Access Control
-      Distributed Trust
+        Consensus Governance
+        Validation Approval
+        Emergency Coordination
+        Distributed Trust
     
-    Scalability
+    Advanced Scalability
       Multi-chain Support
+      Bitcoin Script Engine
+      Oracle Integration
       Queue Processing
       Auto-scaling
       Performance Optimization

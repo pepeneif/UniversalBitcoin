@@ -22,11 +22,13 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 - Historical validation statistics
 - Cross-chain token distribution analytics
 
-### 🔒 **Guardian Angels Security**
-- Multi-signature Bitcoin wallets controlled by "Guardian Angels"
-- Distributed consensus for all validation approvals
-- Rate limiting and anti-spam protection
-- Comprehensive audit trails
+### 🔒 **Multi-Layer Security Architecture**
+- **Guardian Angels Multi-Signature**: Distributed consensus for all validation approvals
+- **Bitcoin Discrete Log Contracts (DLCs)**: 80% of reserves locked in immutable time/condition-based contracts
+- **Liquidity Provider System**: 20% liquid reserves for daily operations with economic incentives
+- **Advanced Script Engine**: Complex multi-condition Bitcoin script compilation and execution
+- **Rate limiting and anti-spam protection**
+- **Comprehensive audit trails**
 
 ### 🔗 **Developer-Friendly Integration**
 - RESTful API for external integrations
@@ -60,12 +62,37 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 
 ## 💰 How It Works
 
+### Enhanced Security Model
+Our system employs a revolutionary **three-layer security architecture**:
+
+#### Layer 1: DLC-Locked Reserves (80%)
+- **Immutable Contracts**: 80% of Bitcoin reserves locked in Discrete Log Contracts
+- **Time-Based Unlocks**: Funds only accessible after predetermined time periods
+- **Condition-Based Access**: Multi-party consensus required for early access
+- **Oracle Integration**: External data feeds for contract execution
+- **Cryptographic Guarantees**: Mathematically enforced security
+
+#### Layer 2: Liquidity Provider System (20%)
+- **Operational Liquidity**: 20% liquid reserves for daily validation operations
+- **Economic Incentives**: LPs earn rewards for providing liquidity
+- **Risk Management**: Automated collateral requirements and penalties
+- **Market Making**: Maintains token liquidity across all supported chains
+- **Emergency Procedures**: Rapid response protocols for liquidity crises
+
+#### Layer 3: Guardian Angels Multi-Sig
+- **Validation Oversight**: Guardian consensus for all proof-of-reserve requests
+- **System Governance**: Multi-party control of system parameters
+- **Emergency Response**: Coordinated response to security incidents
+- **Audit Trail**: Complete transparency of all Guardian actions
+
 ### To validate our Reserves (Proof Requests)
 1. **Make Payment**: Send small amount (e.g., 0.001 ETH or 0.01 SOL) to a specific address
 2. **Include Message**: Specify the message you want signed in the validation user interface
 3. **Guardian Review**: Multiple Guardian Angels independently review and approve the request
-4. **Get Proof**: Receive an easy to verify Bitcoin message proving control of the reserves
-5. **Verify Independently**: Use Bitcoin standard tools or wallets to verify the message
+4. **DLC Verification**: System automatically verifies DLC-locked reserves are intact
+5. **LP Coordination**: Liquidity Providers ensure adequate liquid reserves for operations
+6. **Get Proof**: Receive cryptographic proof of both locked and liquid reserve control
+7. **Verify Independently**: Use Bitcoin standard tools to verify the comprehensive reserve proof
 
 ### For uBTC Token Holders
 1. **Check Dashboard**: View real-time reserve ratios and system health
@@ -73,11 +100,13 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 3. **Integrate APIs**: Build custom monitoring solutions
 
 ### For Administrators
-1. **Manage Reserves**: Coordinate with Guardian Angels for Bitcoin deposits/withdrawals
-2. **Mint uBTC**: Create UniversalBTC tokens corresponding to Bitcoin deposits (requires Guardian approval)
-3. **Burn uBTC**: Remove UniversalBTC tokens when Bitcoin is withdrawn (requires Guardian approval)
-4. **Monitor System**: Track validations, manage rate limits, view audit trails
+1. **DLC Management**: Deploy and manage Discrete Log Contracts for reserve locking
+2. **LP Coordination**: Oversee Liquidity Provider operations and incentive distribution
+3. **Reserve Allocation**: Balance between DLC-locked (80%) and liquid (20%) reserves
+4. **Contract Deployment**: Create and execute complex Bitcoin scripts and conditions
 5. **Guardian Coordination**: Facilitate communication and consensus among Guardian Angels
+6. **System Monitoring**: Track DLC health, LP performance, and validation metrics
+7. **Emergency Procedures**: Execute emergency unlocks and system recovery protocols
 
 ## 🚀 Quick Start
 
@@ -129,6 +158,19 @@ BITCOIN_NETWORK=mainnet
 MULTISIG_THRESHOLD=3
 MULTISIG_TOTAL=5
 GUARDIAN_ANGELS=["guardian1", "guardian2", "guardian3", "guardian4", "guardian5"]
+
+# DLC Configuration
+DLC_LOCK_PERCENTAGE=80
+DLC_TIMELOCK_BLOCKS=144  # 24 hours
+DLC_ORACLE_PUBKEYS=["oracle1", "oracle2", "oracle3"]
+DLC_EMERGENCY_THRESHOLD=4
+
+# Liquidity Provider Configuration
+LP_RESERVE_PERCENTAGE=20
+LP_MIN_COLLATERAL_RATIO=150
+LP_REWARD_RATE=0.05
+LP_PENALTY_RATE=0.10
+LP_LIQUIDATION_THRESHOLD=120
 
 # Rate Limiting
 MAX_VALIDATIONS_PER_HOUR=10
@@ -209,13 +251,31 @@ GET /api/v1/validate/{validation_id}
 - **VIP Addresses**: Configurable higher limits
 - **Queue Processing**: Delayed execution when limits exceeded
 
-### Guardian Angels Security Settings
+### Enhanced Security Settings
+
+#### Guardian Angels Configuration
 - **Multi-Sig Threshold**: 3-of-5 Guardian Angels required for signatures
 - **Guardian Distribution**: Geographically and organizationally distributed
 - **Consensus Protocol**: Byzantine fault-tolerant approval process
 - **Access Control**: Role-based admin permissions + Guardian approvals
 - **Audit Logging**: Complete Guardian activity tracking
 - **Communication Security**: Encrypted Guardian-to-Guardian messaging
+
+#### DLC Security Parameters
+- **Reserve Lock Ratio**: 80% of total reserves locked in DLCs
+- **Time Lock Period**: 24-hour minimum unlock delay
+- **Oracle Consensus**: 2-of-3 oracle signatures required
+- **Emergency Threshold**: 4-of-5 Guardian consensus for emergency unlock
+- **Script Validation**: Comprehensive Bitcoin script security auditing
+- **Contract Immutability**: DLC terms cannot be modified once deployed
+
+#### Liquidity Provider Security
+- **Collateral Requirements**: 150% minimum collateral ratio
+- **Risk Assessment**: Real-time monitoring of LP solvency
+- **Automated Liquidation**: Triggered at 120% collateral ratio
+- **Penalty System**: 10% penalty for LP default
+- **Insurance Fund**: Reserve fund for LP failures
+- **Multi-Chain Monitoring**: Cross-chain LP position tracking
 
 ### Monitoring
 - **Health Checks**: `/health` endpoint for uptime monitoring
@@ -304,14 +364,39 @@ docker-compose up --scale validation-service=3
 
 ## 🔐 Security
 
-### Guardian Angels Security Best Practices
+### Enhanced Security Best Practices
+
+#### Guardian Angels Security
 - Regular Guardian Angel security audits
 - Distributed key management across Guardian Angels
 - Multi-party computation for sensitive operations
-- Rate limiting and DDoS protection
 - Comprehensive Guardian activity logging
 - Secure Guardian communication channels
 - Regular Guardian Angel rotation policies
+
+#### DLC Security Practices
+- Formal verification of all Bitcoin scripts
+- Regular security audits of DLC contracts
+- Time-locked backup recovery procedures
+- Oracle security and reliability monitoring
+- Immutable contract deployment procedures
+- Emergency unlock protocol testing
+
+#### Liquidity Provider Security
+- Continuous monitoring of LP solvency
+- Automated risk assessment and liquidation
+- Multi-chain collateral diversification
+- Insurance fund management
+- LP performance tracking and optimization
+- Cross-chain arbitrage prevention
+
+#### Operational Security
+- Rate limiting and DDoS protection
+- Multi-layer encryption for all sensitive data
+- Secure communication channels between all parties
+- Regular penetration testing and vulnerability assessments
+- Incident response procedures for each security layer
+- Comprehensive audit trails across all systems
 
 ### Incident Response
 1. **Detection**: Automated monitoring alerts
@@ -347,16 +432,30 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ✅ Multi-chain validation engine
 - ✅ Public transparency dashboard
 - ✅ Admin minting/burning interface
-- ✅ Rate limiting and security
+- ✅ Guardian Angels multi-signature security
+- ✅ Rate limiting and basic security
 
-### Phase 2: Enhanced Features (Q3 2025)
+### Phase 2: Enhanced Security (Q3 2025)
+- ✅ Bitcoin Discrete Log Contracts (DLC) implementation
+- ✅ Liquidity Provider system with economic incentives
+- ✅ Advanced Bitcoin script compilation engine
+- ✅ Multi-layer security architecture
+- ✅ Oracle integration for DLC execution
 - 🔲 Advanced analytics and reporting
 - 🔲 Mobile app for validation requests
-- 🔲 Automated reserve management
 
-### Phase 3: Expansion (Q4 2025)
+### Phase 3: Advanced Features (Q4 2025)
+- 🔲 AI-powered risk assessment
+- 🔲 Cross-chain automated market making
+- 🔲 Decentralized governance integration
+- 🔲 Advanced compliance and regulatory reporting
 - 🔲 Additional blockchain support
-- 🔲 Additional API features
+
+### Phase 4: Platform Evolution (Q1 2026)
+- 🔲 White-label solutions for enterprises
+- 🔲 Advanced DeFi protocol integrations
+- 🔲 Institutional custody solutions
+- 🔲 Global regulatory compliance framework
 
 ---
 
