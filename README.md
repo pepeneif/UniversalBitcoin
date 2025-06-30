@@ -1,5 +1,5 @@
 # Universal Bitcoin 
-##Multi-Chain Proof-of-Reserves System
+Multi-Chain Proof-of-Reserves System
 
 ## 🚀 Overview
 
