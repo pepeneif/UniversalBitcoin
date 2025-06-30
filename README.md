@@ -10,7 +10,7 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 ### 🔍 **Proof-of-Reserves Validation**
 - Anyone can request cryptographic proof that Bitcoin reserves match minted uBTC tokens in each of the supported chains
 - Pay small fees (Lamports on Solana, Gwei on Ethereum) to trigger the issuance of an easy to verify signed Bitcoin message
-- Real-time verification across multiple blockchains
+- Real-time verification requests across multiple blockchains
 
 ### 🌐 **Multi-Chain Support**
 - **Supported Chains**: Ethereum, Solana, Polygon, Arbitrum, BSC 
