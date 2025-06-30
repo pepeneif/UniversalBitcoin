@@ -14,7 +14,7 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 ### 🌐 **Multi-Chain Support**
 - **Primary Chains**: Ethereum, Solana
 - **Expansion Chains**: Polygon, Arbitrum, BSC
-- Unified reserves backing tokens across all supported chains
+- **Separate Reserves** backing the tokens on each of the supported chains
 
 ### 📊 **Public Transparency Dashboard**
 - Real-time reserve ratios for each blockchain
@@ -23,8 +23,7 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 - Cross-chain token distribution analytics
 
 ### 🔒 **Guardian Angels Security**
-- Multi-signature Bitcoin wallet controlled by trusted "Guardian Angels"
-- 3-of-5 threshold signature scheme for enhanced security
+- Multi-signature Bitcoin wallets controlled by "Guardian Angels"
 - Distributed consensus for all validation approvals
 - Rate limiting and anti-spam protection
 - Comprehensive audit trails
@@ -61,18 +60,17 @@ Universal Bitcoin is a revolutionary multi-blockchain proof-of-reserves system t
 
 ## 💰 How It Works
 
-### For Validators (Proof Requesters)
+### To validate our Reserves (Proof Requests)
 1. **Make Payment**: Send small amount (e.g., 0.001 ETH or 0.01 SOL) to designated address
 2. **Include Message**: Specify the message you want signed in transaction data
 3. **Guardian Review**: Multiple Guardian Angels independently review and approve the request
-4. **Get Proof**: Receive multi-signature Bitcoin message proving reserve control
-5. **Verify Independently**: Use Bitcoin tools to verify the multi-signature authentically
+4. **Get Proof**: Receive an easy to verify Bitcoin message proving control of the reserves
+5. **Verify Independently**: Use Bitcoin tools to verify the message
 
 ### For uBTC Token Holders
 1. **Check Dashboard**: View real-time reserve ratios and system health
-2. **Request Validations**: Pay for custom validation requests
-3. **Monitor Transparency**: Track historical validation data
-4. **Integrate APIs**: Build custom monitoring solutions
+2. **Monitor Transparency**: Track historical validation data
+3. **Integrate APIs**: Build custom monitoring solutions
 
 ### For Administrators
 1. **Manage Reserves**: Coordinate with Guardian Angels for Bitcoin deposits/withdrawals
